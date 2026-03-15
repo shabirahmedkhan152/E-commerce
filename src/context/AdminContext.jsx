@@ -58,7 +58,7 @@ export function AdminProvider({ children }) {
       setOrders(response.data);
       return response.data;
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching orders:', error?.response?.data || error.message || error);
       return [];
     }
   };
@@ -87,7 +87,7 @@ export function AdminProvider({ children }) {
       setProducts(mapped);
       return mapped;
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching products:', error?.response?.data || error.message || error);
       return [];
     }
   };
@@ -100,8 +100,13 @@ export function AdminProvider({ children }) {
       setProducts(prev => [savedProduct, ...prev]);
       return { success: true, product: savedProduct };
     } catch (error) {
-      console.error('Error adding product:', error);
-      return { success: false, message: 'Failed to add product' };
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data ||
+        error.message ||
+        'Failed to add product';
+      console.error('Error adding product:', message);
+      return { success: false, message };
     }
   };
 
