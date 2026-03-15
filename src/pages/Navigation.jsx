@@ -1,5 +1,8 @@
 // src/pages/Navigation.jsx
 import { Link } from "react-router-dom";
+import { IoMdPricetag } from "react-icons/io";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaArrowRight,
   FaStar,
@@ -9,18 +12,28 @@ import {
   FaFacebookF,
   FaInstagram,
   FaTwitter,
-  FaHeart,
 } from "react-icons/fa";
-import { IoMdPricetag } from "react-icons/io";
-import { useState, useEffect } from "react";
-
+import { FaBars, FaTimes } from 'react-icons/fa';
 function Navigation() {
   const [currentImage, setCurrentImage] = useState(0);
+const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuItems = [
+    { id: "all", name: "All Products" },
+    { id: "womens-fashion", name: "Women Fashion" },
+    { id: "mens-collection", name: "Men Collection" },
+    { id: "kids-wear", name: "Kids Category" },
+    {id:"Accessories",name:"Accessories and jewelery"},
+    { id: "Signup", name: "Register" },
+    {id:"Signin",name:"SIGNIN"}
+  ];
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState("all");
+  
 
   const heroImages = [
-    "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&auto=format&fit=crop",
+    "https://akcollections.pk/cdn/shop/files/WhatsApp-Image-2025-04-02-at-8.02.42-PM_600x.jpg?v=1752570097",
+    "https://monoandco.pk/cdn/shop/files/IMG_20231009_150801.jpg?v=1696997240",
+    "https://img.drz.lazcdn.com/static/pk/p/34c618a9ffa5158503c976c8af7720c7.jpg_960x960q80.jpg_.webp",
   ];
 
   // Auto-rotate hero images
@@ -59,7 +72,7 @@ const categories = [
   { 
     name: "Women's Fashion", 
     link: "womens-fashion",  // URL ke liye
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&auto=format&fit=crop", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3UBSuc8MJZFDmewGPuGdWBGAI1UhoHSZFpQ&s", 
     count: 50 
   },
   { 
@@ -110,6 +123,27 @@ const categories = [
       image: "https://randomuser.me/api/portraits/women/68.jpg",
     },
   ];
+  const handleCategoryClick = (catId) => {
+    if (catId === "womens-fashion") {
+      navigate("/category/womens-fashion");
+    } else if (catId === "mens-collection") {
+      navigate("/category/mens-collection");
+    } else if (catId === "kids-wear") {
+      navigate("/category/kids-wear");
+    } else if (catId === "Accessories") {
+      navigate("/category/accessories");
+    }
+    else if (catId === "Signup") {
+      navigate("/signup");
+    } 
+    else if (catId === "Signin") {
+      navigate("/signin");
+    } 
+    
+    else {
+      setActiveCategory(catId);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -117,110 +151,144 @@ const categories = [
       <div className="bg-gray-900 text-white text-sm py-2">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <p className="hidden md:block">Hey there! Welcome to KHAN CLOTHING</p>
-          {/* Auth Buttons */}
-          <div className="flex items-center gap-3">
-            <Link to="/signin">
-              <button className="px-5 py-2 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all transform hover:scale-105 shadow-lg">
-                Sign In
-              </button>
-            </Link>
-            <Link to="/signup">
-              <button className="px-5 py-2 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-800 transition-all transform hover:scale-105 shadow-lg">
-                Sign Up
-              </button>
-            </Link>
-          </div>
+          
         </div>
       </div>
-
       {/* Main Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link
-              to="/"
-              className="text-2xl font-bold tracking-wider hover:text-gray-700 transition-colors"
-            >
-              KHAN<span className="text-gray-500 text-sm ml-1">CLOTHING</span>
-            </Link>
-
-            {/* Navigation Links */}
-            <nav className="hidden md:flex space-x-8">
-              <Link
-                to="/about"
-                className="text-gray-700 hover:text-gray-900 font-medium"
-              >
-                About Us
-              </Link>
-              <Link
-                to="/contact"
-                className="text-gray-700 hover:text-gray-900 font-medium"
-              >
-                Contact Us
-              </Link>
+            <header className="bg-white shadow-md sticky top-0 z-50">
+              <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between h-20">
+                  {/* Mobile Menu Button */}
+                  <button 
+                    className="lg:hidden text-2xl"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  >
+                    {isMenuOpen ? <FaTimes /> : <FaBars />}
+                  </button>
+      
+                  {/* Logo */}
+                  <div className="text-2xl font-bold tracking-wider">
+                    KHAN<span className="text-gray-500 text-sm ml-1">CLOTHING</span>
+                  </div>
+                  
+                  <div>
+                    <button onClick={() => navigate("/signin")} className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors ">
+                      Sign In
+                    </button>
+                    
+                    <div className="inline-block mx-2"></div>
+                    
+                    <button onClick={() => navigate("/signup")} className="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                      Sign Up
+                    </button>
+                  </div>
+      
+                  {/* Desktop Navigation */}
+            <nav className="hidden lg:flex space-x-8">
+              {menuItems.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryClick(cat.id)}
+                  className={`font-medium transition-colors hover:text-gray-900 ${
+                    activeCategory === cat.id ? 'text-black border-b-2 border-black' : 'text-gray-600'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </nav>
-          </div>
-        </div>
-      </header>
+                 
+      
+                 
+                </div>
+      
+                
+                
+                {/* Mobile Menu */}
+          {isMenuOpen && (
+            <nav className="lg:hidden py-4 border-t animate-slideDown">
+              {menuItems.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    handleCategoryClick(cat.id);
+                    setIsMenuOpen(false);
+                  }}
+                  className={`block w-full text-left py-2 px-4 font-medium transition-colors ${
+                    activeCategory === cat.id ? 'bg-gray-100 text-black' : 'text-gray-600'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </nav>
+          )}
+              </div>
+            </header>
+
+      
 
       {/* Hero Section with Auto-rotating Background */}
-      <section className="relative h-[600px] overflow-hidden">
-        {heroImages.map((img, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentImage ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <img
-              src={img}
-              alt={`Hero ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+<section className="relative h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] overflow-hidden">
+  {heroImages.map((img, index) => (
+    <div
+      key={index}
+      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+        index === currentImage ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <img
+        src={img}
+        alt={`Hero ${index + 1}`}
+        className="w-full h-full object-cover md:object-contain lg:object-cover xl:object-contain bg-gray-900"
+      />
+    </div>
+  ))}
+  
+  {/* Gradient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent md:from-black/70 md:via-black/50"></div>
 
-        <div className="relative container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl text-white">
-            <span className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
-              🎉 New Collection 2026
-            </span>
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
-              Discover Your <br />
-              <span className="text-amber-300">Perfect Style</span>
-            </h1>
-            <p className="text-xl mb-8 text-gray-200">
-              Explore our latest collection of elegant and contemporary fashion.
-              Quality clothing that makes you feel confident and beautiful.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/signup">
-                <button className="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg flex items-center gap-2">
-                  Start Shopping <FaArrowRight />
-                </button>
-              </Link>
-              <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition-all transform hover:scale-105 backdrop-blur-sm">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
+  {/* Content */}
+  <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center z-10">
+    <div className="max-w-xl sm:max-w-2xl text-white">
+      <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 animate-pulse">
+        🎉 New Collection 2026
+      </span>
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 leading-tight">
+        Discover Your <br />
+        <span className="text-amber-300">Perfect Style</span>
+      </h1>
+      <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-gray-200 max-w-lg sm:max-w-xl">
+        Explore our latest collection of elegant and contemporary fashion.
+        Quality clothing that makes you feel confident and beautiful.
+      </p>
+      <div className="flex flex-wrap gap-3 sm:gap-4">
+        <Link to="/signup">
+          <button className="bg-white text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg flex items-center gap-2 text-sm sm:text-base group">
+            Start Shopping 
+            <FaArrowRight className="text-xs sm:text-sm group-hover:translate-x-1 transition-transform" />
+          </button>
+        </Link>
+      </div>
+    </div>
+  </div>
 
-        {/* Hero Indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentImage(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentImage ? "w-8 bg-white" : "bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
-      </section>
+  {/* Hero Indicators */}
+  <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3 z-20">
+    {heroImages.map((_, index) => (
+      <button
+        key={index}
+        onClick={() => setCurrentImage(index)}
+        className={`transition-all duration-300 ease-in-out ${
+          index === currentImage 
+            ? "w-6 sm:w-8 h-2 sm:h-2.5 bg-white" 
+            : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white/50 hover:bg-white/80"
+        } rounded-full`}
+        aria-label={`Go to slide ${index + 1}`}
+      />
+    ))}
+  </div>
+</section>
 
       {/* Features Section */}
       <section className="py-16 bg-gray-50">
@@ -278,50 +346,7 @@ const categories = [
         </div>
       </section>
 
-      {/* Featured Collection */}
-      <section id="featured" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1">
-              <span className="text-amber-600 font-semibold mb-2 block">
-                FEATURED
-              </span>
-              <h2 className="text-4xl font-bold mb-4">Velvet Collection 8</h2>
-              <p className="text-gray-600 mb-6 text-lg">
-                Discover our latest luxury velvet ensemble, crafted with
-                precision and elegance for the modern woman. Limited edition
-                pieces.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2">
-                  <FaHeart className="text-red-500" />
-                  <span>Premium quality velvet fabric</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <FaHeart className="text-red-500" />
-                  <span>Hand-embroidered details</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <FaHeart className="text-red-500" />
-                  <span>Available in multiple colors</span>
-                </li>
-              </ul>
-              <Link to="/signup">
-                <button className="bg-gray-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800 transition-all transform hover:scale-105">
-                  Shop Collection
-                </button>
-              </Link>
-            </div>
-            <div className="flex-1">
-              <img
-                src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop"
-                alt="Velvet Collection"
-                className="rounded-2xl shadow-2xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Testimonials */}
       <section className="py-16">
@@ -452,43 +477,7 @@ const categories = [
                 </li>
               </ul>
             </div>
-            <div>
-              <h5 className="font-semibold mb-4">Categories</h5>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    to="/new-arrivals"
-                    className="hover:text-white transition-colors"
-                  >
-                    New Arrivals
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/trending"
-                    className="hover:text-white transition-colors"
-                  >
-                    Trending
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/velvet-collection"
-                    className="hover:text-white transition-colors"
-                  >
-                    Velvet Collection
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/sale"
-                    className="hover:text-white transition-colors"
-                  >
-                    Sale
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            
             <div>
               <h5 className="font-semibold mb-4">Contact</h5>
               <ul className="space-y-2 text-gray-400">
