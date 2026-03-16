@@ -54,7 +54,7 @@ export function AdminProvider({ children }) {
   // Fetch Orders from backend
   const fetchOrders = async () => {
     try {
-      const response = await api.get('/orders');
+      const response = await api.get('/api/orders');
       setOrders(response.data);
       return response.data;
     } catch (error) {
@@ -66,7 +66,7 @@ export function AdminProvider({ children }) {
   // Update Order Status
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      const response = await api.patch(`/orders/${orderId}`, { status: newStatus });
+      const response = await api.patch(`/api/orders/${orderId}`, { status: newStatus });
       const updated = response.data;
       setOrders(prev => prev.map(order =>
         order.orderId === orderId ? updated : order
@@ -81,7 +81,7 @@ export function AdminProvider({ children }) {
   // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products');
+      const response = await api.get('/api/products');
       // Map Mongoose _id to id for UI
       const mapped = response.data.map(p => ({ ...p, id: p._id }));
       setProducts(mapped);
@@ -95,7 +95,7 @@ export function AdminProvider({ children }) {
   // Add New Product (saved in backend)
   const addProduct = async (productData) => {
     try {
-      const response = await api.post('/products', productData);
+      const response = await api.post('/api/products', productData);
       const savedProduct = { ...response.data, id: response.data._id };
       setProducts(prev => [savedProduct, ...prev]);
       return { success: true, product: savedProduct };
@@ -113,7 +113,7 @@ export function AdminProvider({ children }) {
   // Delete Product
   const deleteProduct = async (productId) => {
     try {
-      await api.delete(`/products/${productId}`);
+      await api.delete(`/api/products/${productId}`);
       setProducts(prev => prev.filter(p => p.id !== productId));
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -124,7 +124,7 @@ export function AdminProvider({ children }) {
   // Update Product
   const updateProduct = async (productId, updatedData) => {
     try {
-      const response = await api.put(`/products/${productId}`, updatedData);
+      const response = await api.put(`/api/products/${productId}`, updatedData);
       const updatedProduct = { ...response.data, id: response.data._id };
       setProducts(prev => prev.map(p => (p.id === productId ? updatedProduct : p)));
       return updatedProduct;
